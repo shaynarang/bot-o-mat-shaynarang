@@ -16,11 +16,11 @@ RSpec.describe Robot, type: :model do
   }
 
   before(:each) {
-      5.times do |i|
-        Task.create(description: 'Desc',
-                    eta: "#{i+1}0000".to_i)
-        end
-    }
+    5.times do |i|
+      Task.create(description: 'Desc',
+                  eta: "#{i+1}0000".to_i)
+      end
+  }
 
   let(:tasks) { Task.all }
 
