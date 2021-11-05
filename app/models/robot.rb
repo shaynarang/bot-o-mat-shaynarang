@@ -23,4 +23,8 @@ class Robot < ApplicationRecord
       3
     end
   end
+
+  def mobile?
+    unipedal? ? false : true
+  end
 end
