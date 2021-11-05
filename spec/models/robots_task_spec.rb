@@ -52,4 +52,12 @@ RSpec.describe RobotsTask, type: :model do
     error = /Robot cannot have more than five tasks/
     expect{ tasks.map{ |task| robot.tasks << task } }.to raise_error(error)
   end
+
+  it 'validates mobility' do
+    robot.tasks.destroy_all
+    robot.kind = 'unipedal'
+    task.update(requires_mobility: true)
+    error = /Robot must be mobile to complete this task/
+    expect{ robot.tasks << task }.to raise_error(error)
+  end
 end
