@@ -15,6 +15,15 @@ RSpec.describe Robot, type: :model do
                         user: user)
   }
 
+  before(:each) {
+      5.times do |i|
+        Task.create(description: 'Desc',
+                    eta: "#{i+1}0000".to_i)
+        end
+    }
+
+  let(:tasks) { Task.all }
+
   it 'is valid with valid attributes' do
     expect(subject).to be_valid
   end
@@ -33,15 +42,6 @@ RSpec.describe Robot, type: :model do
   end
 
   describe 'task duration' do
-    before(:each) {
-      5.times do |i|
-        Task.create(description: 'Desc',
-                    eta: "#{i+1}0000".to_i)
-        end
-    }
-
-    let(:tasks) { Task.all }
-
     context 'without tasks' do
       it 'returns nothing for robots without tasks' do
         expect(subject.tasks_duration).to be_nil
