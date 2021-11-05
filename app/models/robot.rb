@@ -6,4 +6,21 @@ class Robot < ApplicationRecord
   has_many :tasks, through: :robots_tasks
 
   enum kind: { unipedal: 0, bipedal: 1, quadrupedal: 2, arachnid: 3, radial: 4, aeronautical: 5 }
+
+  def appendages
+    case kind
+    when 'unipedal'
+      1
+    when 'bipedal'
+      2
+    when 'quadrupedal'
+      4
+    when 'arachnid'
+      8
+    when 'radial'
+      6
+    when 'aeronautical'
+      3
+    end
+  end
 end
