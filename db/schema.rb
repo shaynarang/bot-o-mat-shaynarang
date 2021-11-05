@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_05_004042) do
+ActiveRecord::Schema.define(version: 2021_11_05_024918) do
 
   create_table "robots", force: :cascade do |t|
     t.string "name"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 2021_11_05_004042) do
     t.integer "eta"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "requires_mobility"
   end
 
   create_table "users", force: :cascade do |t|
