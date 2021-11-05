@@ -42,42 +42,37 @@ RSpec.describe Robot, type: :model do
 
     let(:tasks) { Task.all }
 
-    let(:robot) {
-      described_class.create(name: 'Foo',
-                             kind: 'unipedal',
-                             user: user)
-    }
-
     context 'without tasks' do
       it 'returns nothing for robots without tasks' do
-        expect(robot.tasks_duration).to be_nil
+        expect(subject.tasks_duration).to be_nil
       end
     end
 
     context 'with two tasks' do
       it 'returns the tasks duration for robots with three appendages' do
-        robot.update(kind: 'aeronautical')
+        subject.update(kind: 'aeronautical')
         tasks = Task.limit(2)
-        tasks.map{ |task| robot.tasks << task }
-        expect(robot.tasks_duration).to eq(20000)
+        tasks.map{ |task| subject.tasks << task }
+        expect(subject.tasks_duration).to eq(20000)
       end
     end
 
     context 'with five tasks' do
-      before(:each) { tasks.map{ |task| robot.tasks << task } }
+      before(:each) { tasks.map{ |task| subject.tasks << task } }
 
       it 'returns the tasks duration for robots with one appendage' do
-        expect(robot.tasks_duration).to eq(150000)
+        subject.update(kind: 'unipedal')
+        expect(subject.tasks_duration).to eq(150000)
       end
 
       it 'returns the tasks duration for five or more appendages' do
-        robot.update(kind: 'arachnid')
-        expect(robot.tasks_duration).to eq(50000)
+        subject.update(kind: 'arachnid')
+        expect(subject.tasks_duration).to eq(50000)
       end
 
       it 'returns the tasks duration for five or more appendages' do
-        robot.update(kind: 'quadrupedal')
-        expect(robot.tasks_duration).to eq(90000)
+        subject.update(kind: 'quadrupedal')
+        expect(subject.tasks_duration).to eq(90000)
       end
     end
   end
