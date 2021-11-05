@@ -15,12 +15,12 @@ RSpec.describe Robot, type: :model do
                         user: user)
   }
 
-  before(:each) {
+  before(:each) do
     5.times do |i|
       Task.create(description: 'Desc',
                   eta: "#{i+1}0000".to_i)
-      end
-  }
+    end
+  end
 
   let(:tasks) { Task.all }
 
@@ -39,6 +39,29 @@ RSpec.describe Robot, type: :model do
 
   it 'returns the mobility' do
     expect(subject.mobile?).to be_truthy
+  end
+
+  describe 'validation' do
+    let(:task) { Task.create(description: 'Desc', eta: 20000) }
+
+    context 'task amount' do
+      it 'validates the amount of tasks' do
+        tasks.map{ |task| subject.tasks << task }
+        subject.tasks << task
+        error = /Robot cannot have more than five tasks/
+        expect{ subject.save! }.to raise_error(error)
+      end
+    end
+
+    context 'mobility' do
+      it 'validates mobility' do
+        subject.kind = 'unipedal'
+        task.update(requires_mobility: true)
+        subject.tasks << task
+        error = /Robot must be mobile to complete this task/
+        expect{ subject.save! }.to raise_error(error)
+      end
+    end
   end
 
   describe 'task duration' do

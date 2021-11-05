@@ -7,6 +7,11 @@ class Robot < ApplicationRecord
 
   enum kind: { unipedal: 0, bipedal: 1, quadrupedal: 2, arachnid: 3, radial: 4, aeronautical: 5 }
 
+  before_validation :remove_mobile_tasks, unless: -> { mobile? }
+
+  validate :task_amount
+  validate :mobility
+
   def appendages
     case kind
     when 'unipedal'
@@ -38,11 +43,29 @@ class Robot < ApplicationRecord
     else
       etas = tasks.pluck(:eta).sort
       maximums = []
-      batch_count = appendages > tasks.count ? tasks.count : appendages
+      batch_count = appendages > tasks.size ? tasks.size : appendages
       etas.each_cons(batch_count) do |batch|
         maximums << batch.max
       end
       maximums.sum
     end
+  end
+
+  private
+
+  def task_amount
+    error = 'cannot have more than five tasks'
+    errors.add(:robot, error) if tasks&.size > 5
+  end
+
+  def mobility
+    return if tasks.empty?
+
+    error = 'must be mobile to complete this task'
+    errors.add(:robot, error) if !mobile? && tasks.map(&:requires_mobility).include?(true)
+  end
+
+  def remove_mobile_tasks
+    tasks.where(requires_mobility: true).destroy_all
   end
 end
