@@ -10,6 +10,6 @@ class RobotsTask < ApplicationRecord
   private
 
   def task_amount
-    errors.add(:robot, 'cannot have more than five tasks') if robot.tasks.count == 5
+    errors.add(:robot, 'cannot have more than five tasks') if robot&.tasks&.count == 5
   end
 end
