@@ -27,4 +27,22 @@ class Robot < ApplicationRecord
   def mobile?
     unipedal? ? false : true
   end
+
+  def tasks_duration
+    return if tasks.empty?
+
+    if appendages >= 5
+      tasks.pluck(:eta).max
+    elsif appendages == 1
+      tasks.pluck(:eta).sum
+    else
+      etas = tasks.pluck(:eta).sort
+      maximums = []
+      batch_count = appendages > tasks.count ? tasks.count : appendages
+      etas.each_cons(batch_count) do |batch|
+        maximums << batch.max
+      end
+      maximums.sum
+    end
+  end
 end
