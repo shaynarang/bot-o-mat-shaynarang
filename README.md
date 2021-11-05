@@ -88,7 +88,7 @@ Due to the creative nature of this project, please do not post the prompt or you
 - Each task requires at least one appendage to complete.
 - The difference in appendages must have an implication on ability.
 - A robot with more than one appendage can complete multiple tasks simultaneously.
-- A radial robot has an unspecified number of appendages. Since it is included in this assignment, it must have some utility. As such, it most have at least one appendage. Since it is radial, it must have at least three appendages in order to move. Since quadrupedal and arachnid are already types, it must not have four or eight appendages. Assuming an even number of appendages is needed for balance, six appendages is my best guess.
+- A radial robot has an unspecified number of appendages. Since it is included in this assignment, it must have some utility. As such, it most have at least one appendage. Since it is not bipedal, it must have at least three appendages in order to move. Since quadrupedal and arachnid are already types, it must not have four or eight appendages. Assuming an even number of appendages is needed for balance, six appendages is my best guess.
 - An aeronautical robot has an unspecified number of appendages. Since it is included in this assignment, it must have some utility. As such, it most have at least one appendage. Robots with one, two, four, six, and eight appendages are already classified. This leaves three, five, seven, or nine plus appendages. A higher number of appendages would weight a flight-capable robot down. As such, three appendages is my best guess.
 - Assuming no obstructions, all robots abide by the same eta.
 - A robot can execute no more than five tasks at a time.
