@@ -1,11 +1,14 @@
 <h1>Robots</h1>
 
-<table>
+<%= link_to 'New Robot', new_robot_path, class: 'btn btn-primary new_robot' %>
+
+<table class='table'>
   <thead>
     <tr>
       <th>Name</th>
       <th>Kind</th>
       <th>Task Count</th>
+      <th>Tasks Duration in Milliseconds</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -16,9 +19,11 @@
         <td><%= robot.name %></td>
         <td><%= robot.kind.humanize %></td>
         <td><%= robot.tasks.count %></td>
+        <td><%= robot.tasks_duration %></td>
         <td>
           <%= link_to 'Edit', edit_robot_path(robot), class: 'btn btn-outline-primary shadow-none' %>
-          <%= link_to 'Run Tasks', '#', class: 'run_tasks btn btn-outline-success shadow-none', data: { robot_id: robot.id }, role: 'button' %>
+          <% disabled = robot.tasks.empty? ? 'disabled' : '' %>
+          <%= link_to 'Run Tasks', '#', class: "run_tasks btn btn-outline-success shadow-none #{disabled}", data: { robot_id: robot.id }, role: 'button' %>
           <%= link_to 'Destroy', robot, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-outline-danger shadow-none' %>
         </td>
       </tr>
@@ -26,13 +31,10 @@
   </tbody>
 </table>
 
-<br>
-
-<%= link_to 'New Robot', new_robot_path %>
-
 <% @robots.order(:id).each do |robot| %>
+  <% next if robot.tasks.empty? %>
   <div class='task_log'>
-    <%= robot.name %>
+    <div class='log_robot_name'><%= robot.name %></div>
     <div class='dotter' data-robot-id=<%= robot.id %>></div>
     <div class='timer' data-robot-id=<%= robot.id %>></div>
     <div class='log' data-robot-id=<%= robot.id %>></div>
