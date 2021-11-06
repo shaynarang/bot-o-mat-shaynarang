@@ -92,6 +92,7 @@ $(document).on('turbolinks:load', function() {
 
   // upon click of run tasks link
   $('a.run_tasks').on('click', function(event) {
+    // prevent default click event
     event.preventDefault();
 
     // obtain id from data attribute
