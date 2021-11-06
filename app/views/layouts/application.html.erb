@@ -16,10 +16,10 @@
     <%= render 'layouts/navbar' %>
     <div id='content'>
       <% if notice %>
-        <p class='notice'><%= notice %></p>
+        <p class='notice text-success'><%= notice %></p>
       <% end %>
       <% if alert %>
-        <p class='alert'><%= alert %></p>
+        <p class='alert text-danger'><%= alert %></p>
       <% end %>
       <%= yield %>
     </span>
