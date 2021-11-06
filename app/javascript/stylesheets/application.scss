@@ -4,11 +4,15 @@ div#content {
   padding: 20px;
 }
 
+a.new_robot {
+  margin: 10px 0;
+}
+
 div.dotter {
-  background-color: #bca;
-  width: 200px;
+  background-color: var(--bs-green);
+  width: 30px;
+  height: 30px;
   text-align: center;
-  border: 2px solid green;
   font-size: 14px;
 }
 
@@ -16,10 +20,22 @@ div.task_log {
   margin: 20px 0;
 }
 
+div.log {
+  margin-top: 10px;
+}
+
 div.timer {
   display: none;
-  margin: 5px 0;
+  margin: 10px 0;
   width: 200px;
-  border: 1px solid black;
+  border: 2px solid black;
   text-align: center;
+}
+
+div.form-group {
+  margin-bottom: 25px;
+}
+
+div.error-explanation {
+  margin: 20px 0;
 }
