@@ -17,10 +17,9 @@
         <td><%= robot.kind.humanize %></td>
         <td><%= robot.tasks.count %></td>
         <td>
-          <%= link_to 'Show', robot %>
-          <%= link_to 'Edit', edit_robot_path(robot) %>
-          <%= link_to 'Destroy', robot, method: :delete, data: { confirm: 'Are you sure?' } %>
-          <%= link_to 'Run Tasks', '#', class: 'run_tasks', data: { robot_id: robot.id } %>
+          <%= link_to 'Edit', edit_robot_path(robot), class: 'btn btn-outline-primary shadow-none' %>
+          <%= link_to 'Run Tasks', '#', class: 'run_tasks btn btn-outline-success shadow-none', data: { robot_id: robot.id }, role: 'button' %>
+          <%= link_to 'Destroy', robot, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-outline-danger shadow-none' %>
         </td>
       </tr>
     <% end %>
