@@ -31,7 +31,6 @@ class RobotsController < ApplicationController
   # POST /robots or /robots.json
   def create
     @robot = Robot.new(robot_params)
-
     respond_to do |format|
       if @robot.save
         format.html { redirect_to robots_url, notice: 'Robot was successfully created.' }
@@ -44,8 +43,9 @@ class RobotsController < ApplicationController
   # PATCH/PUT /robots/1
   def update
     respond_to do |format|
-      @robot.attributes = {'task_ids' => []}.merge(robot_params || {})
       if @robot.update(robot_params)
+        # this allows task ids params to go through when all boxes are unchecked
+        @robot.attributes = {'task_ids' => []}.merge(robot_params || {}) if @robot.valid?
         format.html { redirect_to robots_url, notice: 'Robot was successfully updated.' }
       else
         format.html { render :edit, status: :unprocessable_entity }
