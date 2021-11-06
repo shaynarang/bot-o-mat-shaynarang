@@ -1,0 +1,7 @@
+<nav>
+  <ul>
+    <% if current_user %>
+      <li><%= button_to "logout", destroy_user_session_path, method: :delete  %></li>
+    <% end %>
+  </ul>
+</nav>
