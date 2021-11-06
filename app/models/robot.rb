@@ -7,6 +7,8 @@ class Robot < ApplicationRecord
 
   enum kind: { unipedal: 0, bipedal: 1, quadrupedal: 2, arachnid: 3, radial: 4, aeronautical: 5 }
 
+  accepts_nested_attributes_for :tasks, allow_destroy: true
+
   before_validation :remove_mobile_tasks, unless: -> { mobile? }
 
   validate :task_amount
