@@ -1,0 +1,32 @@
+<%= form_with(model: robot, local: true) do |f| %>
+  <% if robot.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(robot.errors.count, "error") %> prohibited this robot from being saved:</h2>
+
+      <ul>
+        <% robot.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.label :name %>
+  <%= f.text_field :name %></br>
+  <%= f.label :kind %>
+  <%= f.select :kind, Robot.kinds.map { |key, value| [key.humanize, key] } %><br>
+  <%= f.hidden_field :user_id, value: current_user.id %>
+
+  <h3>Assign Tasks</h3>
+  <% Task.all.each do |task| %>
+    <% mobility_class = task.requires_mobility ? 'requires_mobility' : '' %>
+    <fieldset class=<%= mobility_class%>>
+      <%= check_box_tag :task_ids, task.id, robot.tasks.include?(task), :name => 'robot[task_ids][]' %>
+      <%= label_tag :task_ids, task.description %><br>
+    </fieldset>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

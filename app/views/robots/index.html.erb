@@ -1,0 +1,42 @@
+<h1>Robots</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Kind</th>
+      <th>Task Count</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @robots.order(:id).each do |robot| %>
+      <tr>
+        <td><%= robot.name %></td>
+        <td><%= robot.kind.humanize %></td>
+        <td><%= robot.tasks.count %></td>
+        <td>
+          <%= link_to 'Show', robot %>
+          <%= link_to 'Edit', edit_robot_path(robot) %>
+          <%= link_to 'Destroy', robot, method: :delete, data: { confirm: 'Are you sure?' } %>
+          <%= link_to 'Run Tasks', '#', class: 'run_tasks', data: { robot_id: robot.id } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Robot', new_robot_path %>
+
+<% @robots.order(:id).each do |robot| %>
+  <div class='task_log'>
+    <%= robot.name %>
+    <div class='dotter' data-robot-id=<%= robot.id %>></div>
+    <div class='timer' data-robot-id=<%= robot.id %>></div>
+    <div class='log' data-robot-id=<%= robot.id %>></div>
+  </div>
+<% end %>
+
