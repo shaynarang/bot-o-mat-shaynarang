@@ -27,7 +27,7 @@ $(document).on('turbolinks:load', function() {
   }
 
   // adapted from https://stackoverflow.com/a/22385697/2697694
-  function runTimer(timer_div, count, duration) {
+  function runTimer(timer_div, count) {
     var counter;
     var initialMillis;
 
@@ -80,7 +80,7 @@ $(document).on('turbolinks:load', function() {
     $.getJSON( '/robots/' + robot_id  + '.json', function(data) {
       duration = data['tasks_duration'];
       // decrement timer for duration
-      runTimer(timer, duration, duration);
+      runTimer(timer, duration);
       // animate progress_bar
       animateProgressBar(progress_bar, duration);
       // formulate log entry
