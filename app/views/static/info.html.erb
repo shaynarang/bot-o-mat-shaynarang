@@ -47,7 +47,7 @@
   <li>Bootstrap</li>
 </ul>
 
-<h2>My Assumptions</h2>
+<h2>Assumptions</h2>
 
 <ul>
   <li>Some tasks require mobility.</li>
@@ -64,6 +64,6 @@
   <li>A robot performing multiple tasks simultaneously must complete the longest task of the batch in order to proceed to the next batch.</li>
 </ul>
 
-<h3>The Logic</h3>
+<h3>Duration Logic</h3>
 
 <p>A robot with five or more appendages can complete all tasks simultaneously, so the most lengthy of the tasks will constitute the duration. A robot with one appendage must work through each task sequentially, so the sum of the length of the tasks will constitute the duration. Robots with more than one but less than five appendages can iterate over batches of tasks. The most lengthy task in each batch length will constitute the length for the batch. The sum of the length of each batch will constitute the duration.</p>
