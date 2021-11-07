@@ -1,6 +1,6 @@
 $(document).on('turbolinks:load', function() {
   // append items to body after duration 
-  function appendItemsToLog(log, items, delay) {
+  function appendItemsToLog(log, link, items, delay) {
     window.setTimeout(function() {
       // clear task log
       log.empty();
@@ -9,6 +9,8 @@ $(document).on('turbolinks:load', function() {
         .appendTo(log);
       // display log
       log.fadeIn();
+      // reenable link
+      link.removeClass('disabled');
     }, delay);
   }
 
@@ -74,7 +76,7 @@ $(document).on('turbolinks:load', function() {
       })
   }
 
-  function displayTaskInfo(robot_id, progress_bar, timer, log) {
+  function displayTaskInfo(robot_id, progress_bar, timer, log, link) {
     // hit json show endpoint to acquire robot data
     $.getJSON( '/robots/' + robot_id  + '.json', function(data) {
       duration = data['tasks_duration'];
@@ -85,7 +87,7 @@ $(document).on('turbolinks:load', function() {
       // formulate log entry
       items = formulateLogEntry(data);
       // append items to log
-      appendItemsToLog(log, items, duration);
+      appendItemsToLog(log, link, items, duration);
     });
   }
 
@@ -101,11 +103,15 @@ $(document).on('turbolinks:load', function() {
     var progress_bar = $("div.progress_bar[data-robot-id='" + robot_id + "']")
     var timer = $("div.timer[data-robot-id='" + robot_id + "']")
     var log = $("div.log[data-robot-id='" + robot_id + "']")
+    var link = $(this);
+
+    // disable link
+    link.addClass('disabled');
 
     // reset log
     log.hide();
 
     // display task info
-    displayTaskInfo(robot_id, progress_bar, timer, log);
+    displayTaskInfo(robot_id, progress_bar, timer, log, link);
   });
 });
