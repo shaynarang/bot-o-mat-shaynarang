@@ -65,6 +65,46 @@ class Robot < ApplicationRecord
     end
   end
 
+  # the method above returns a single duration combining the etas of all tasks
+  # this method is granular and returns hashes containing task batches and durations
+  def tasks_batch_info
+    return if tasks.empty?
+
+    # instantiate batches
+    batches = []
+    # a robot with five or more appendages can complete all tasks simultaneously
+    if appendages >= 5
+      # retrieve the eta of the most lengthy task and add all tasks to batches
+      batches << {
+        duration: tasks.pluck(:eta).max,
+        tasks: tasks.pluck(:description)
+      }
+    # a robot with one appendage must work through each task sequentially
+    elsif appendages == 1
+      # iterate over each task and add the eta and task to batches
+      tasks.each do |task|
+        batches << {
+          duration: task.eta,
+          tasks: [task.description]
+        }
+      end
+    # a robot with between one and five appendages can work in batches
+    else
+      # if a robot has more appendages than tasks, set the batch count to the task size
+      batch_count = appendages > tasks.size ? tasks.size : appendages
+      # iterate over multiple tasks
+      tasks.order(:eta).each_slice(batch_count) do |task_batch|
+        # add most lengthy eta of the batch and all tasks to batches
+        batches << {
+          duration: task_batch.pluck(:eta).max,
+          tasks: task_batch.pluck(:description)
+        }
+      end
+    end
+    # return batches
+    batches
+  end
+
   private
 
   def task_amount
