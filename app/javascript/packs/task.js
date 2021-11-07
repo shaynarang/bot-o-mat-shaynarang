@@ -57,17 +57,17 @@ $(document).on('turbolinks:load', function() {
     counter = setInterval(timer, 1);
   }
 
-  function resetDotter(dotter) {
-    dotter.css({
+  function resetProgressBar(progress_bar) {
+    progress_bar.css({
       width: "",
       fontSize: "",
       borderWidth: ""
     });
   }
 
-  function animateDotter(dotter, duration) {
-    resetDotter(dotter);
-    dotter.animate({
+  function animateProgressBar(progress_bar, duration) {
+    resetProgressBar(progress_bar);
+    progress_bar.animate({
         width: '100%'
       }, {
         queue: false,
@@ -75,14 +75,14 @@ $(document).on('turbolinks:load', function() {
       })
   }
 
-  function displayTaskInfo(robot_id, dotter, timer, log) {
+  function displayTaskInfo(robot_id, progress_bar, timer, log) {
     // hit json show endpoint to acquire robot data
     $.getJSON( '/robots/' + robot_id  + '.json', function(data) {
       duration = data['tasks_duration'];
       // decrement timer for duration
       runTimer(timer, duration, duration);
-      // animate dotter
-      animateDotter(dotter, duration);
+      // animate progress_bar
+      animateProgressBar(progress_bar, duration);
       // formulate log entry
       items = formulateLogEntry(data);
       // append items to log
@@ -98,8 +98,8 @@ $(document).on('turbolinks:load', function() {
     // obtain id from data attribute
     robot_id = $(this).data('robot-id');
 
-    // define dotter, timer, and log elements
-    var dotter = $("div.dotter[data-robot-id='" + robot_id + "']")
+    // define progress_bar, timer, and log elements
+    var progress_bar = $("div.progress_bar[data-robot-id='" + robot_id + "']")
     var timer = $("div.timer[data-robot-id='" + robot_id + "']")
     var log = $("div.log[data-robot-id='" + robot_id + "']")
 
@@ -107,6 +107,6 @@ $(document).on('turbolinks:load', function() {
     log.hide();
 
     // display task info
-    displayTaskInfo(robot_id, dotter, timer, log);
+    displayTaskInfo(robot_id, progress_bar, timer, log);
   });
 });

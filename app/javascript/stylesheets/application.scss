@@ -8,7 +8,7 @@ a.new_robot {
   margin: 10px 0;
 }
 
-div.dotter {
+div.progress_bar {
   background-color: var(--bs-green);
   width: 30px;
   height: 30px;
@@ -51,4 +51,12 @@ div.devise_form {
 a.disabled_link {
   pointer-events: none;
   cursor: default;
+}
+
+a.requirement_toggle {
+  text-decoration: none;
+}
+
+span.requirements {
+  display: none;
 }
