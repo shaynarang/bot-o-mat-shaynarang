@@ -79,6 +79,7 @@ $(document).on('turbolinks:load', function() {
   function runTasks(robot_id, progress_bar, timer, log, link) {
     // hit json show endpoint to acquire robot data
     $.getJSON( '/robots/' + robot_id  + '.json', function(data) {
+      // the duration for all tasks to be completed
       duration = data['tasks_duration'];
       // decrement timer for duration
       runTimer(timer, duration);
