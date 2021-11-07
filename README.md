@@ -116,6 +116,9 @@ This application allows users to create and assign tasks to robots. Robots with 
 - A robot can execute no more than five tasks at a time.
 - A robot performing multiple tasks simultaneously must complete the longest task of the batch in order to proceed to the next batch.
 
+## Deployment
+The application has been deployed to https://quiet-taiga-20534.herokuapp.com/. You can sign up using an example email address and create robots/assign tasks from there. If you would like to set it up on your machine, the instructions are below.
+
 ## Set Up
 - Clone the repository
 - Navigate to the directory
