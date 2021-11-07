@@ -1,0 +1,69 @@
+<a class='requirement_toggle' href="#"><h2>The Requirements</h2></a>
+
+<span class='requirements'>
+  <p>Use any language to complete this challenge. The implementation is up to you: it can be a command-line application or have a graphical interface.</p>
+
+  <p>Your application should collect a name and robot type from the types we list below. For each, it should create a Robot of the type the user chooses, e.g. Larry, Bipedal.</p>
+
+  <p>Given the list of tasks below, your application should then assign the Robot a set of five tasks, all of which complete after a duration that we show in milliseconds.</p>
+
+  <ul>
+    <li>Collect a name and robot type from user.</li>
+    <li>Instantiate a Robot of the type provided by the user with the name provided by the user - for example: Bipedal, Larry.</li>
+    <li>Set up methods on Robot to complete tasks from the provided list.</li>
+  </ul>
+
+  <p>Robot completes tasks and removes them from the list when they are done (i.e. enough time has passed since starting the task).</p>
+
+  <p>Tasks have a description and an estimated time to complete.</p>
+</span>
+
+<br>
+
+<h2>The Application</h2>
+
+<p>This application allows users to create and assign tasks to robots. Robots with multiple appendages can work through multiple tasks simultaneously. Robots with one appendage (unipedal) must work through each task sequentially. Tasks that require mobility are unavailable to unipedal robots. After one or more robots have been created, users can 'Run Tasks', simultaneously if desired. The graphical interface provides a countdown timer and a progress bar to indicate the actual amount of time it takes the robots to complete all of their tasks.</p>
+
+<h3>Features</h3>
+
+<ul>
+  <li>User authentication</li>
+  <li>An interface to create, edit, and destroy a robot</li>
+  <li>An interface to assign tasks to a robot</li>
+  <li>Client and server side validation based on the assumptions listed below</li>
+  <li>An interface to view robot task count and duration</li>
+  <li>A tasks countdown timer</li>
+  <li>A progress bar animation</li>
+</ul>
+
+<h3>Technologies Used</h3>
+
+<ul>
+  <li>Ruby on Rails</li>
+  <li>Postgres</li>
+  <li>Rspec</li>
+  <li>Devise</li>
+  <li>JBuilder</li>
+  <li>Bootstrap</li>
+</ul>
+
+<h2>My Assumptions</h2>
+
+<ul>
+  <li>Some tasks require mobility.</li>
+  <li>The unipedal robot is not mobile so it cannot complete some tasks.</li>
+  <li>A radial robot is mobile.</li>
+  <li>An aeronautical robot is mobile.</li>
+  <li>Each task requires at least one appendage to complete.</li>
+  <li>The difference in appendage amount must have an implication on ability.</li>
+  <li>A robot with more than one appendage can complete multiple tasks simultaneously.</li>
+  <li>A radial robot has an unspecified number of appendages. Since it is included in this assignment, it must have some utility. As such, it most have at least one appendage. Since it is not bipedal, it must have at least three appendages in order to move. Since quadrupedal and arachnid are already types, it must not have four or eight appendages. Assuming an even number of appendages is needed for balance, six appendages is my best guess.</li>
+  <li>An aeronautical robot has an unspecified number of appendages. Since it is included in this assignment, it must have some utility. As such, it most have at least one appendage. Robots with one, two, four, six, and eight appendages are already classified. This leaves three, five, seven, or nine plus appendages. A higher number of appendages would weight a flight-capable robot down. As such, three appendages is my best guess.</li>
+  <li>Assuming no obstructions, all robots abide by the same eta for a single task.</li>
+  <li>A robot can execute no more than five tasks at a time.</li>
+  <li>A robot performing multiple tasks simultaneously must complete the longest task of the batch in order to proceed to the next batch.</li>
+</ul>
+
+<h3>The Logic</h3>
+
+<p>A robot with five or more appendages can complete all tasks simultaneously, so the most lengthy of the tasks will constitute the duration. A robot with one appendage must work through each task sequentially, so the sum of the length of the tasks will constitute the duration. Robots with more than one but less than five appendages can iterate over batches of tasks. The most lengthy task in each batch length will constitute the length for the batch. The sum of the length of each batch will constitute the duration.</p>
