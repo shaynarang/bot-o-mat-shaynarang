@@ -39,6 +39,13 @@ This application is the result of the Bot-o-mat challenge from Red Ventures. It 
 ## Deployment
 The application has been deployed to https://quiet-taiga-20534.herokuapp.com/. You can sign up using an example email address and create robots/assign tasks from there. If you would like to set it up on your machine, the instructions are below.
 
+## Files of Interest
+- app/models/robot.rb contains the task duration logic
+- app/javascript/packs/robot.js contains script that disables task selection based on mobility requirements
+- app/javascript/packs/task.js contains script that runs the timer, progress bar, and appends to the task log
+- app/views/robots contains the view files constituting a majority of the interface
+- app/spec/models/ contains spec files for the business logic of robots and the robots_task join
+
 ## Set Up
 - Clone the repository
 - Navigate to the directory
