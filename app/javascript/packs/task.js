@@ -10,7 +10,6 @@ $(document).on('turbolinks:load', function() {
       // display log
       log.fadeIn();
     }, delay);
-
   }
 
   // formulate log entry from json data
