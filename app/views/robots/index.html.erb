@@ -9,8 +9,9 @@
     <tr>
       <th>Name</th>
       <th>Kind</th>
+      <th>Appendage Count</th>
       <th>Task Count</th>
-      <th>Total ETA in Seconds</th>
+      <th>Tasks Duration in Seconds</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -20,6 +21,7 @@
       <tr>
         <td><%= robot.name %></td>
         <td><%= robot.kind.humanize %></td>
+        <td><%= robot.appendages %></td>
         <td><%= robot.tasks.count %></td>
         <td><%= robot.tasks_duration&.fdiv(1000)&.to_s&.sub(/\.?0+$/, '') %></td>
         <td>
