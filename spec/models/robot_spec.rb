@@ -64,7 +64,7 @@ RSpec.describe Robot, type: :model do
     end
   end
 
-  describe 'task duration' do
+  describe 'tasks duration' do
     context 'without tasks' do
       it 'returns nothing for robots without tasks' do
         expect(subject.tasks_duration).to be_nil
