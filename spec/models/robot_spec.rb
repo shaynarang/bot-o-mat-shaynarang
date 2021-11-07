@@ -99,4 +99,57 @@ RSpec.describe Robot, type: :model do
       end
     end
   end
+
+  describe 'tasks batch info' do
+    context 'without tasks' do
+      it 'returns nothing for robots without tasks' do
+        expect(subject.tasks_batch_info).to be_nil
+      end
+    end
+
+    context 'with two tasks' do
+      it 'returns the tasks duration for robots with three appendages' do
+        subject.update(kind: 'aeronautical')
+        tasks = Task.limit(2)
+        tasks.map{ |task| subject.tasks << task }
+        batch_info = [
+                       {:duration=>20000, :tasks=>["Desc", "Desc"]}
+                     ]
+        expect(subject.tasks_batch_info).to eq(batch_info)
+      end
+    end
+
+    context 'with five tasks' do
+      before(:each) { tasks.map{ |task| subject.tasks << task } }
+
+      it 'returns the tasks duration for robots with one appendage' do
+        subject.update(kind: 'unipedal')
+        batch_info = [
+                       {:duration=>10000, :tasks=>["Desc"]},
+                       {:duration=>20000, :tasks=>["Desc"]},
+                       {:duration=>30000, :tasks=>["Desc"]},
+                       {:duration=>40000, :tasks=>["Desc"]},
+                       {:duration=>50000, :tasks=>["Desc"]}
+                     ]
+        expect(subject.tasks_batch_info).to eq(batch_info)
+      end
+
+      it 'returns the tasks duration for five or more appendages' do
+        subject.update(kind: 'arachnid')
+        batch_info = [
+                       {:duration=>50000, :tasks=>["Desc", "Desc", "Desc", "Desc", "Desc"]}
+                     ]
+        expect(subject.tasks_batch_info).to eq(batch_info)
+      end
+
+      it 'returns the tasks duration for five or more appendages' do
+        subject.update(kind: 'quadrupedal')
+        batch_info = [
+                       {:duration=>40000, :tasks=>["Desc", "Desc", "Desc", "Desc"]},
+                       {:duration=>50000, :tasks=>["Desc"]}
+                     ]
+        expect(subject.tasks_batch_info).to eq(batch_info)
+      end
+    end
+  end
 end
