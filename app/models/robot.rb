@@ -11,6 +11,7 @@ class Robot < ApplicationRecord
 
   before_validation :remove_mobile_tasks, unless: -> { mobile? }
 
+  validates_presence_of :name, :kind
   validate :task_amount
   validate :mobility
 
