@@ -10,7 +10,7 @@
       <th>Name</th>
       <th>Kind</th>
       <th>Task Count</th>
-      <th>Tasks Duration in Milliseconds</th>
+      <th>Total ETA in Seconds</th>
       <th>Actions</th>
     </tr>
   </thead>
@@ -21,7 +21,7 @@
         <td><%= robot.name %></td>
         <td><%= robot.kind.humanize %></td>
         <td><%= robot.tasks.count %></td>
-        <td><%= robot.tasks_duration %></td>
+        <td><%= robot.tasks_duration.fdiv(1000).to_s.sub(/\.?0+$/, '') %></td>
         <td>
           <%= link_to 'Edit', edit_robot_path(robot), class: 'btn btn-outline-primary shadow-none' %>
           <% disabled = robot.tasks.empty? ? 'disabled' : '' %>
