@@ -83,7 +83,7 @@ Due to the creative nature of this project, please do not post the prompt or you
 
 
 ## The Application
-This application allows users to create and assign tasks to robots. Robots with multiple appendages can work through multiple tasks simultaneously. Robots with one appendage (unipedal) must work through each task sequentially. Tasks that require mobility are unavailable to unipedal robots. After one or more robots have been created, users can 'Run Tasks', simultaneously if desired. The graphical interface provides a countdown timer and a progress bar to indicate the actual amount of time it takes the robots to complete all of their tasks.
+This application allows users to create and assign tasks to robots. Robots with multiple appendages can work through multiple tasks simultaneously. Robots with one appendage (unipedal) must work through each task sequentially. Tasks that require mobility are unavailable to unipedal robots. After one or more robots have been created, users can 'Run Tasks', simultaneously if desired. The graphical interface provides a timer and a progress bar to indicate the actual amount of time it takes the robots to complete all of their tasks. Tasks and durations are added to the log as they are completed.
 
 ## Features
 - User authentication
@@ -91,8 +91,9 @@ This application allows users to create and assign tasks to robots. Robots with 
 - An interface to assign tasks to a robot
 - Client and server side validation based on the assumptions listed below
 - An interface to view robot task count and duration
-- A tasks countdown timer
+- A tasks timer
 - A progress bar animation
+- A tasks log that populates as tasks are completed in real time
 
 ## Technologies Used
 - Ruby on Rails
@@ -100,6 +101,7 @@ This application allows users to create and assign tasks to robots. Robots with 
 - Rspec
 - Devise
 - JBuilder
+- jQuery
 - Bootstrap
 
 ## Assumptions
