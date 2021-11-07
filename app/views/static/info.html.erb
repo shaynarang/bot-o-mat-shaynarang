@@ -1,6 +1,6 @@
-<a class='requirement_toggle' href="#"><h2>The Requirements</h2></a>
+<a class='challenge_toggle' href="#"><h2>The Challenge</h2></a>
 
-<span class='requirements'>
+<span class='challenge'>
   <p>Use any language to complete this challenge. The implementation is up to you: it can be a command-line application or have a graphical interface.</p>
 
   <p>Your application should collect a name and robot type from the types we list below. For each, it should create a Robot of the type the user chooses, e.g. Larry, Bipedal.</p>
@@ -22,7 +22,7 @@
 
 <h2>The Application</h2>
 
-<p>This application allows users to create and assign tasks to robots. Robots with multiple appendages can work through multiple tasks simultaneously. Robots with one appendage (unipedal) must work through each task sequentially. Tasks that require mobility are unavailable to unipedal robots. After one or more robots have been created, users can 'Run Tasks', simultaneously if desired. The graphical interface provides a countdown timer and a progress bar to indicate the actual amount of time it takes the robots to complete all of their tasks.</p>
+<p>This application allows users to create and assign tasks to robots. Robots with multiple appendages can work through multiple tasks simultaneously. Robots with one appendage (unipedal) must work through each task sequentially. Tasks that require mobility are unavailable to unipedal robots. After one or more robots have been created, users can 'Run Tasks', simultaneously if desired. The graphical interface provides a timer and a progress bar to indicate the actual amount of time it takes the robots to complete all of their tasks. Tasks and durations are added to the log as they are completed.</p>
 
 <h3>Features</h3>
 
@@ -32,8 +32,9 @@
   <li>An interface to assign tasks to a robot</li>
   <li>Client and server side validation based on the assumptions listed below</li>
   <li>An interface to view robot task count and duration</li>
-  <li>A tasks countdown timer</li>
+  <li>A tasks timer</li>
   <li>A progress bar animation</li>
+  <li>A tasks log that populates as tasks are completed in real time</li>
 </ul>
 
 <h3>Technologies Used</h3>
@@ -43,6 +44,7 @@
   <li>Postgres</li>
   <li>Rspec</li>
   <li>Devise</li>
+  <li>jQuery</li>
   <li>JBuilder</li>
   <li>Bootstrap</li>
 </ul>
