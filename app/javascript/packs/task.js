@@ -1,73 +1,76 @@
 $(document).on('turbolinks:load', function() {
-  // append items to body after duration 
-  function appendItemsToLog(log, link, items, delay) {
+  // append entries to log after duration
+  function appendEntriesToLog(log, entries, delay) {
+    // consider delay (duration) prior to append
     window.setTimeout(function() {
-      // clear task log
-      log.empty();
-      // place list items in unordered list
-      $('<ul/>', { html: items.join( '' ) })
+      // place list entries in unordered list
+      $('<ul/>', { html: entries.join( '' ) })
         .appendTo(log);
       // display log
       log.fadeIn();
-      // reenable link
-      link.removeClass('disabled');
     }, delay);
   }
 
   // formulate log entry from json data
-  function formulateLogEntry(data) {
+  function formulateLogEntries(name, duration, tasks) {
+    // convert duration to seconds
+    duration = duration / 1000
+    // account for singular second
+    var unit = duration > 0 ? ' seconds' : ' second'
+    // instantiate collection
     items = [];
-    var name = data['name'];
-    var duration = data['tasks_duration'];
-    $.map(data['tasks'], function(task) {
-      var description = task['description'];
-      items.push('<li>' + name + ' completed ' + description + '</li>')
+    // iterate over tasks
+    $.map(tasks, function(task) {
+      // formulate li with name and task and push to items
+      items.push('<li>' + name + ' completed ' + task + '</li>')
     });
-    items.push('<li>' + name + ' took ' + duration + ' milliseconds' + '</li>')
+    // formulate li with name and duration and unit and push to items
+    items.push('<li>' + name + ' took ' + duration + unit + '</li>')
+    // return collection
     return items
   }
 
-  // adapted from https://stackoverflow.com/a/22385697/2697694
-  function runTimer(timer_div, count) {
-    var counter;
-    var initialMillis;
-
-    timer_div.fadeIn();
-
-    function timer() {
-      if (count <= 0) {
+  // a timer that increments in seconds
+  function runTimer(timer, total_duration, link) {
+    // display timer
+    timer.show();
+    // convert total duration to seconds
+    total_duration = total_duration / 1000
+    // instantiate count
+    var count = 0;
+    // place counter function in variable
+    var counter = setInterval(function() {
+      // increment count
+      ++count;
+      // set html to current count
+      $(timer).html(count);
+      // when the timer has met the total duration
+      if (count >= total_duration) {
+        // stop
         clearInterval(counter);
-        timer_div.hide();
-        return;
+        // display the total duration
+        var unit = total_duration > 1 ? ' seconds' : ' second'
+        $(timer).html(total_duration + unit);
+        // reenable link
+        link.removeClass('disabled');
       }
-      var current = Date.now();
-
-      count = count - (current - initialMillis);
-      initialMillis = current;
-      displayCount(count);
-    }
-
-    function displayCount(count) {
-      var res = count / 1000;
-      var text = res.toPrecision(count.toString().length) + " secs";
-      timer_div[0].innerHTML = text;
-    }
-
-    clearInterval(counter);
-    initialMillis = Date.now();
-    counter = setInterval(timer, 1);
+    }, 1000);
   }
 
+  // reset progress bar back to default settings
   function resetProgressBar(progress_bar) {
     progress_bar.css({
-      width: "",
-      fontSize: "",
-      borderWidth: ""
+      width: '',
+      fontSize: '',
+      borderWidth: ''
     });
   }
 
+  // animate the width of the progress bar
   function animateProgressBar(progress_bar, duration) {
+    // reset progress bar to default settings
     resetProgressBar(progress_bar);
+    // run animation
     progress_bar.animate({
         width: '100%'
       }, {
@@ -76,19 +79,33 @@ $(document).on('turbolinks:load', function() {
       })
   }
 
+  // obtain data and run tasks in batches
   function runTasks(robot_id, progress_bar, timer, log, link) {
     // hit json show endpoint to acquire robot data
     $.getJSON( '/robots/' + robot_id  + '.json', function(data) {
-      // the duration for all tasks to be completed
-      duration = data['tasks_duration'];
-      // decrement timer for duration
-      runTimer(timer, duration);
-      // animate progress_bar
-      animateProgressBar(progress_bar, duration);
-      // formulate log entry
-      items = formulateLogEntry(data);
-      // append items to log
-      appendItemsToLog(log, link, items, duration);
+      // define name, batches, total duration, and accumulated duration
+      var name = data['name']
+      var batches = data['tasks_batch_info']
+      var total_duration = data['tasks_duration']
+      var accumulated_duration = 0;
+
+      // iterate over batches of tasks
+      $.map(batches, function(batch){
+        // define duration and tasks of current batch
+        var batch_duration = batch['duration']
+        var tasks = batch['tasks'];
+
+        // formulate log entries for current batch
+        var log_entries = formulateLogEntries(name, batch_duration, tasks);
+
+        // add current batch duration to accumulated duration
+        accumulated_duration += batch_duration;
+
+        // run tumer, animate progress bar, and append entries to log
+        runTimer(timer, total_duration, link);
+        animateProgressBar(progress_bar, total_duration)
+        appendEntriesToLog(log, log_entries, accumulated_duration);
+      });
     });
   }
 
@@ -106,13 +123,17 @@ $(document).on('turbolinks:load', function() {
     var log = $("div.log[data-robot-id='" + robot_id + "']")
     var link = $(this);
 
-    // disable link
+    // disable run tasks link
     link.addClass('disabled');
 
     // reset log
+    log.empty();
     log.hide();
 
-    // display task info
+    // hide timer in case it is already visible
+    timer.hide();
+
+    // run timer, progress bar, and append to log
     runTasks(robot_id, progress_bar, timer, log, link);
   });
 });
