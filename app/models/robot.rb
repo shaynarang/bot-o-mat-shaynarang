@@ -36,20 +36,31 @@ class Robot < ApplicationRecord
     unipedal? ? false : true
   end
 
+  # calculate the total duration of tasks assigned to a robot
   def tasks_duration
     return if tasks.empty?
 
+    # a robot with five or more appendages can complete all tasks simultaneously
     if appendages >= 5
+      # retrieve the eta of the most lengthy task
       tasks.pluck(:eta).max
+    # a robot with one appendage must work through each task sequentially
     elsif appendages == 1
+      # retrieve the sum of the etas
       tasks.pluck(:eta).sum
+    # a robot with between one and five appendages can work in batches
     else
+      # obtain the etas for all assigned tasks
       etas = tasks.pluck(:eta).sort
+      # instantiate collection
       maximums = []
+      # if a robot has more appendages than tasks, set the batch count to the task size
       batch_count = appendages > tasks.size ? tasks.size : appendages
-      etas.each_cons(batch_count) do |batch|
+      # iterate over the etas and push the maximum of each batch to the collection
+      etas.each_slice(batch_count) do |batch|
         maximums << batch.max
       end
+      # retrieve the sum of the collection
       maximums.sum
     end
   end
