@@ -76,7 +76,7 @@ $(document).on('turbolinks:load', function() {
       })
   }
 
-  function displayTaskInfo(robot_id, progress_bar, timer, log, link) {
+  function runTasks(robot_id, progress_bar, timer, log, link) {
     // hit json show endpoint to acquire robot data
     $.getJSON( '/robots/' + robot_id  + '.json', function(data) {
       duration = data['tasks_duration'];
@@ -112,6 +112,6 @@ $(document).on('turbolinks:load', function() {
     log.hide();
 
     // display task info
-    displayTaskInfo(robot_id, progress_bar, timer, log, link);
+    runTasks(robot_id, progress_bar, timer, log, link);
   });
 });
