@@ -34,7 +34,7 @@ RSpec.describe Robot, type: :model do
   end
 
   it 'returns the number of appendages' do
-    expect(subject.appendages).to eq(2)
+    expect(subject.appendage_count).to eq(2)
   end
 
   it 'returns the mobility' do

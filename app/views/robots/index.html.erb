@@ -22,7 +22,7 @@
         <tr>
           <td><%= robot.name %></td>
           <td><%= robot.kind.humanize %></td>
-          <td><%= robot.appendages %></td>
+          <td><%= robot.appendage_count %></td>
           <td><%= robot.tasks.count %></td>
           <td><%= robot.tasks_duration&.fdiv(1000)&.to_s&.sub(/\.?0+$/, '') %></td>
           <td>

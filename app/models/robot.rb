@@ -15,93 +15,71 @@ class Robot < ApplicationRecord
   validate :task_amount
   validate :mobility
 
-  def appendages
-    case kind
-    when 'unipedal'
-      1
-    when 'bipedal'
-      2
-    when 'quadrupedal'
-      4
-    when 'arachnid'
-      8
-    when 'radial'
-      6
-    when 'aeronautical'
-      3
-    end
+  # Count of appendages based on the kind of robot.
+  def appendage_count
+    {
+      unipedal: 1,
+      bipedal: 2,
+      quadrupedal: 4,
+      arachnid: 8,
+      radial: 6,
+      aeronautical: 3
+    }[kind.to_sym]
   end
 
+  # Boolean depicting only robots with multiple appendages can be mobile.
   def mobile?
     unipedal? ? false : true
   end
 
-  # calculate the total duration of tasks assigned to a robot
+  # Count of tasks to iterate over for robots with between one and five appendages.
+  # If a robot has more appendages than tasks, the batch count is the tasks count.
+  def tasks_batch_count
+    appendage_count > tasks.size ? tasks.size : appendage_count
+  end
+
+  # Array of task durations for robots with between one and five appendages.
+  def task_batch_durations(etas)
+    maximums = []
+    etas.sort.each_slice(tasks_batch_count) do |batch|
+      maximums << batch.max
+    end
+    maximums
+  end
+
+  # Total duration of tasks assigned to a robot.
+  # A robot with five or more appendages can complete all tasks simultaneously.
+  # A robot with one appendage must work through each task sequentially.
+  # A robot with between one and five appendages must work in batches.
   def tasks_duration
     return if tasks.empty?
 
-    # a robot with five or more appendages can complete all tasks simultaneously
-    if appendages >= 5
-      # retrieve the eta of the most lengthy task
-      tasks.pluck(:eta).max
-    # a robot with one appendage must work through each task sequentially
-    elsif appendages == 1
-      # retrieve the sum of the etas
-      tasks.pluck(:eta).sum
-    # a robot with between one and five appendages can work in batches
+    etas = tasks.pluck(:eta)
+    if appendage_count >= 5
+      etas.max
+    elsif appendage_count == 1
+      etas.sum
     else
-      # obtain the etas for all assigned tasks
-      etas = tasks.pluck(:eta).sort
-      # instantiate collection
-      maximums = []
-      # if a robot has more appendages than tasks, set the batch count to the task size
-      batch_count = appendages > tasks.size ? tasks.size : appendages
-      # iterate over the etas and push the maximum of each batch to the collection
-      etas.each_slice(batch_count) do |batch|
-        maximums << batch.max
-      end
-      # retrieve the sum of the collection
-      maximums.sum
+      task_batch_durations(etas).sum
     end
   end
 
-  # the method above returns a single duration combining the etas of all tasks
-  # this method is granular and returns hashes containing task batches and durations
+  # Array of hashes containing task batches and durations.
   def tasks_batch_info
     return if tasks.empty?
 
-    # instantiate batches
     batches = []
-    # a robot with five or more appendages can complete all tasks simultaneously
-    if appendages >= 5
-      # retrieve the eta of the most lengthy task and add all tasks to batches
-      batches << {
-        duration: tasks.pluck(:eta).max,
-        tasks: tasks.pluck(:description)
-      }
-    # a robot with one appendage must work through each task sequentially
-    elsif appendages == 1
-      # iterate over each task and add the eta and task to batches
+    if appendage_count >= 5
+      batches << { duration: tasks.pluck(:eta).max, tasks: tasks.pluck(:description) }
+    elsif appendage_count == 1
       tasks.each do |task|
-        batches << {
-          duration: task.eta,
-          tasks: [task.description]
-        }
+        batches << { duration: task.eta, tasks: [task.description] }
       end
-    # a robot with between one and five appendages can work in batches
     else
-      # if a robot has more appendages than tasks, set the batch count to the task size
-      batch_count = appendages > tasks.size ? tasks.size : appendages
-      # iterate over multiple tasks
-      tasks.order(:eta).each_slice(batch_count) do |task_batch|
-        # add most lengthy eta of the batch and all tasks to batches
-        batches << {
-          duration: task_batch.pluck(:eta).max,
-          tasks: task_batch.pluck(:description)
-        }
+      tasks.order(:eta).each_slice(tasks_batch_count) do |task_batch|
+        batches << { duration: task_batch.pluck(:eta).max, tasks: task_batch.pluck(:description) }
       end
     end
-    # return batches
     batches
   end
 
