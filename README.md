@@ -1,7 +1,7 @@
 # Bot-o-mat
 
 ## The Application
-This application is the result of the Bot-o-mat challenge from Red Ventures. It allows users to create and assign tasks to robots. Robots with multiple appendages can work through multiple tasks simultaneously. Robots with one appendage (unipedal) must work through each task sequentially. Tasks that require mobility are unavailable to unipedal robots. After one or more robots have been created, users can 'Run Tasks', simultaneously if desired. The graphical interface provides a timer and a progress bar to indicate the actual amount of time it takes the robots to complete all of their tasks. Tasks and durations are added to the log as they are completed.
+This application is the result of the Bot-o-mat challenge. It allows users to create and assign tasks to robots. Robots with multiple appendages can work through multiple tasks simultaneously. Robots with one appendage (unipedal) must work through each task sequentially. Tasks that require mobility are unavailable to unipedal robots. After one or more robots have been created, users can 'Run Tasks', simultaneously if desired. The graphical interface provides a timer and a progress bar to indicate the actual amount of time it takes the robots to complete all of their tasks. Tasks and durations are added to the log as they are completed.
 
 ## Features
 - User authentication
