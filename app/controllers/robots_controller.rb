@@ -44,7 +44,7 @@ class RobotsController < ApplicationController
   def update
     respond_to do |format|
       if @robot.update(robot_params)
-        # this allows task ids params to go through when all boxes are unchecked
+        # This allows task ids params to go through when all boxes are unchecked.
         @robot.attributes = {'task_ids' => []}.merge(robot_params || {}) if @robot.valid?
         format.html { redirect_to robots_url, notice: 'Robot was successfully updated.' }
       else
