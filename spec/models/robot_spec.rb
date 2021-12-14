@@ -25,13 +25,48 @@ RSpec.describe Robot, type: :model do
   let(:tasks) { Task.all }
 
   describe 'validation' do
-    it 'is valid with valid attributes' do
-      expect(robot).to be_valid
-    end
-
-    it 'is not valid without a user' do
+    it 'fails without a user' do
       robot.user = nil
       expect(robot).to_not be_valid
+      error = 'must exist'
+      expect(robot.errors.messages[:user]).to eq [error]
+    end
+
+    it 'fails without a name' do
+      robot.name = nil
+      expect(robot).to_not be_valid
+      error = "can't be blank"
+      expect(robot.errors.messages[:name]).to eq [error]
+    end
+
+    it 'fails without a kind' do
+      robot.kind = nil
+      expect(robot).to_not be_valid
+      error = "can't be blank"
+      expect(robot.errors.messages[:kind]).to eq [error]
+    end
+  end
+
+  describe 'task validation' do
+    context 'task amount' do
+      it 'validates the amount of tasks' do
+        tasks.map { |task| robot.tasks << task }
+        robot.tasks << tasks.first.dup
+        expect(robot).to_not be_valid
+        error = 'cannot have more than five tasks'
+        expect(robot.errors.messages[:base]).to eq [error]
+      end
+    end
+
+    context 'mobility' do
+      it 'validates mobility' do
+        robot.kind = 'unipedal'
+        tasks.last.update(requires_mobility: true)
+        robot.tasks << tasks.last
+        expect(robot).to_not be_valid
+        error = 'must be mobile to complete this task'
+        expect(robot.errors.messages[:base]).to eq [error]
+      end
     end
   end
 
@@ -44,29 +79,6 @@ RSpec.describe Robot, type: :model do
   describe '#mobile?' do
     it 'returns the mobility' do
       expect(robot.mobile?).to be_truthy
-    end
-  end
-
-  describe 'task validation' do
-    let(:task) { Task.create(description: 'Desc', eta: 20_000) }
-
-    context 'task amount' do
-      it 'validates the amount of tasks' do
-        tasks.map { |task| subject.tasks << task }
-        subject.tasks << task
-        error = /Robot cannot have more than five tasks/
-        expect { subject.save! }.to raise_error(error)
-      end
-    end
-
-    context 'mobility' do
-      it 'validates mobility' do
-        robot.kind = 'unipedal'
-        task.update(requires_mobility: true)
-        robot.tasks << task
-        error = /Robot must be mobile to complete this task/
-        expect { robot.save! }.to raise_error(error)
-      end
     end
   end
 
