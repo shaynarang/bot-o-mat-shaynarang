@@ -3,22 +3,22 @@
 require 'rails_helper'
 
 RSpec.describe Robot, type: :model do
-  let(:user) {
+  let(:user) do
     User.create(email: 'user@example.com',
                 password: 'password',
                 password_confirmation: 'password')
-  }
+  end
 
-  subject {
+  subject do
     described_class.new(name: 'Foo',
                         kind: 'bipedal',
                         user: user)
-  }
+  end
 
   before(:each) do
     5.times do |i|
       Task.create(description: 'Desc',
-                  eta: "#{i+1}0000".to_i)
+                  eta: "#{i + 1}0000".to_i)
     end
   end
 
@@ -42,14 +42,14 @@ RSpec.describe Robot, type: :model do
   end
 
   describe 'validation' do
-    let(:task) { Task.create(description: 'Desc', eta: 20000) }
+    let(:task) { Task.create(description: 'Desc', eta: 20_000) }
 
     context 'task amount' do
       it 'validates the amount of tasks' do
-        tasks.map{ |task| subject.tasks << task }
+        tasks.map { |task| subject.tasks << task }
         subject.tasks << task
         error = /Robot cannot have more than five tasks/
-        expect{ subject.save! }.to raise_error(error)
+        expect { subject.save! }.to raise_error(error)
       end
     end
 
@@ -59,7 +59,7 @@ RSpec.describe Robot, type: :model do
         task.update(requires_mobility: true)
         subject.tasks << task
         error = /Robot must be mobile to complete this task/
-        expect{ subject.save! }.to raise_error(error)
+        expect { subject.save! }.to raise_error(error)
       end
     end
   end
@@ -75,27 +75,27 @@ RSpec.describe Robot, type: :model do
       it 'returns the tasks duration for robots with three appendages' do
         subject.update(kind: 'aeronautical')
         tasks = Task.limit(2)
-        tasks.map{ |task| subject.tasks << task }
-        expect(subject.tasks_duration).to eq(20000)
+        tasks.map { |task| subject.tasks << task }
+        expect(subject.tasks_duration).to eq(20_000)
       end
     end
 
     context 'with five tasks' do
-      before(:each) { tasks.map{ |task| subject.tasks << task } }
+      before(:each) { tasks.map { |task| subject.tasks << task } }
 
       it 'returns the tasks duration for robots with one appendage' do
         subject.update(kind: 'unipedal')
-        expect(subject.tasks_duration).to eq(150000)
+        expect(subject.tasks_duration).to eq(150_000)
       end
 
       it 'returns the tasks duration for five or more appendages' do
         subject.update(kind: 'arachnid')
-        expect(subject.tasks_duration).to eq(50000)
+        expect(subject.tasks_duration).to eq(50_000)
       end
 
       it 'returns the tasks duration for five or more appendages' do
         subject.update(kind: 'quadrupedal')
-        expect(subject.tasks_duration).to eq(90000)
+        expect(subject.tasks_duration).to eq(90_000)
       end
     end
   end
@@ -111,43 +111,47 @@ RSpec.describe Robot, type: :model do
       it 'returns the tasks duration for robots with three appendages' do
         subject.update(kind: 'aeronautical')
         tasks = Task.limit(2)
-        tasks.map{ |task| subject.tasks << task }
-        batch_info = [
-                       {:duration=>20000, :tasks=>["Desc", "Desc"]}
-                     ]
+        tasks.map { |task| subject.tasks << task }
+        batch_info =
+          [
+            { duration: 20_000, tasks: %w[Desc Desc] }
+          ]
         expect(subject.tasks_batch_info).to eq(batch_info)
       end
     end
 
     context 'with five tasks' do
-      before(:each) { tasks.map{ |task| subject.tasks << task } }
+      before(:each) { tasks.map { |task| subject.tasks << task } }
 
       it 'returns the tasks duration for robots with one appendage' do
         subject.update(kind: 'unipedal')
-        batch_info = [
-                       {:duration=>10000, :tasks=>["Desc"]},
-                       {:duration=>20000, :tasks=>["Desc"]},
-                       {:duration=>30000, :tasks=>["Desc"]},
-                       {:duration=>40000, :tasks=>["Desc"]},
-                       {:duration=>50000, :tasks=>["Desc"]}
-                     ]
+        batch_info =
+          [
+            { duration: 10_000, tasks: ['Desc'] },
+            { duration: 20_000, tasks: ['Desc'] },
+            { duration: 30_000, tasks: ['Desc'] },
+            { duration: 40_000, tasks: ['Desc'] },
+            { duration: 50_000, tasks: ['Desc'] }
+          ]
         expect(subject.tasks_batch_info).to eq(batch_info)
       end
 
       it 'returns the tasks duration for five or more appendages' do
         subject.update(kind: 'arachnid')
-        batch_info = [
-                       {:duration=>50000, :tasks=>["Desc", "Desc", "Desc", "Desc", "Desc"]}
-                     ]
+        batch_info =
+          [
+            { duration: 50_000, tasks: %w[Desc Desc Desc Desc Desc] }
+          ]
         expect(subject.tasks_batch_info).to eq(batch_info)
       end
 
       it 'returns the tasks duration for five or more appendages' do
         subject.update(kind: 'quadrupedal')
-        batch_info = [
-                       {:duration=>40000, :tasks=>["Desc", "Desc", "Desc", "Desc"]},
-                       {:duration=>50000, :tasks=>["Desc"]}
-                     ]
+        batch_info =
+          [
+            { duration: 40_000, tasks: %w[Desc Desc Desc Desc] },
+            { duration: 50_000, tasks: ['Desc'] }
+          ]
         expect(subject.tasks_batch_info).to eq(batch_info)
       end
     end
