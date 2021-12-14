@@ -84,17 +84,15 @@ class Robot < ApplicationRecord
   private
 
   def task_amount
-    return if tasks.blank?
+    return if tasks.blank? || tasks.size <= 5
 
-    error = 'cannot have more than five tasks'
-    errors.add(:base, error) if tasks.size > 5
+    errors.add(:base, 'cannot have more than five tasks')
   end
 
   def mobility
-    return if tasks.blank?
+    return if tasks.blank? || mobile? || !tasks.map(&:requires_mobility).include?(true)
 
-    error = 'must be mobile to complete this task'
-    errors.add(:base, error) if !mobile? && tasks.map(&:requires_mobility).include?(true)
+    errors.add(:base, 'must be mobile to complete this task')
   end
 
   def remove_mobile_tasks
