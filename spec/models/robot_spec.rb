@@ -9,7 +9,7 @@ RSpec.describe Robot, type: :model do
                 password_confirmation: 'password')
   end
 
-  subject do
+  let(:robot) do
     described_class.new(name: 'Foo',
                         kind: 'bipedal',
                         user: user)
@@ -24,24 +24,30 @@ RSpec.describe Robot, type: :model do
 
   let(:tasks) { Task.all }
 
-  it 'is valid with valid attributes' do
-    expect(subject).to be_valid
-  end
-
-  it 'is not valid without a user' do
-    subject.user = nil
-    expect(subject).to_not be_valid
-  end
-
-  it 'returns the number of appendages' do
-    expect(subject.appendage_count).to eq(2)
-  end
-
-  it 'returns the mobility' do
-    expect(subject.mobile?).to be_truthy
-  end
-
   describe 'validation' do
+    it 'is valid with valid attributes' do
+      expect(robot).to be_valid
+    end
+
+    it 'is not valid without a user' do
+      robot.user = nil
+      expect(robot).to_not be_valid
+    end
+  end
+
+  describe '#appendage_count' do
+    it 'returns the number of appendages' do
+      expect(robot.appendage_count).to eq(2)
+    end
+  end
+
+  describe '#mobile?' do
+    it 'returns the mobility' do
+      expect(robot.mobile?).to be_truthy
+    end
+  end
+
+  describe 'task validation' do
     let(:task) { Task.create(description: 'Desc', eta: 20_000) }
 
     context 'task amount' do
@@ -55,76 +61,76 @@ RSpec.describe Robot, type: :model do
 
     context 'mobility' do
       it 'validates mobility' do
-        subject.kind = 'unipedal'
+        robot.kind = 'unipedal'
         task.update(requires_mobility: true)
-        subject.tasks << task
+        robot.tasks << task
         error = /Robot must be mobile to complete this task/
-        expect { subject.save! }.to raise_error(error)
+        expect { robot.save! }.to raise_error(error)
       end
     end
   end
 
-  describe 'tasks duration' do
+  describe '#tasks_duration' do
     context 'without tasks' do
       it 'returns nothing for robots without tasks' do
-        expect(subject.tasks_duration).to be_nil
+        expect(robot.tasks_duration).to be_nil
       end
     end
 
     context 'with two tasks' do
       it 'returns the tasks duration for robots with three appendages' do
-        subject.update(kind: 'aeronautical')
+        robot.update(kind: 'aeronautical')
         tasks = Task.limit(2)
-        tasks.map { |task| subject.tasks << task }
-        expect(subject.tasks_duration).to eq(20_000)
+        tasks.map { |task| robot.tasks << task }
+        expect(robot.tasks_duration).to eq(20_000)
       end
     end
 
     context 'with five tasks' do
-      before(:each) { tasks.map { |task| subject.tasks << task } }
+      before(:each) { tasks.map { |task| robot.tasks << task } }
 
       it 'returns the tasks duration for robots with one appendage' do
-        subject.update(kind: 'unipedal')
-        expect(subject.tasks_duration).to eq(150_000)
+        robot.update(kind: 'unipedal')
+        expect(robot.tasks_duration).to eq(150_000)
       end
 
       it 'returns the tasks duration for five or more appendages' do
-        subject.update(kind: 'arachnid')
-        expect(subject.tasks_duration).to eq(50_000)
+        robot.update(kind: 'arachnid')
+        expect(robot.tasks_duration).to eq(50_000)
       end
 
       it 'returns the tasks duration for five or more appendages' do
-        subject.update(kind: 'quadrupedal')
-        expect(subject.tasks_duration).to eq(90_000)
+        robot.update(kind: 'quadrupedal')
+        expect(robot.tasks_duration).to eq(90_000)
       end
     end
   end
 
-  describe 'tasks batch info' do
+  describe '#tasks_batch_info' do
     context 'without tasks' do
       it 'returns nothing for robots without tasks' do
-        expect(subject.tasks_batch_info).to be_nil
+        expect(robot.tasks_batch_info).to be_nil
       end
     end
 
     context 'with two tasks' do
       it 'returns the tasks duration for robots with three appendages' do
-        subject.update(kind: 'aeronautical')
+        robot.update(kind: 'aeronautical')
         tasks = Task.limit(2)
-        tasks.map { |task| subject.tasks << task }
+        tasks.map { |task| robot.tasks << task }
         batch_info =
           [
             { duration: 20_000, tasks: %w[Desc Desc] }
           ]
-        expect(subject.tasks_batch_info).to eq(batch_info)
+        expect(robot.tasks_batch_info).to eq(batch_info)
       end
     end
 
     context 'with five tasks' do
-      before(:each) { tasks.map { |task| subject.tasks << task } }
+      before(:each) { tasks.map { |task| robot.tasks << task } }
 
       it 'returns the tasks duration for robots with one appendage' do
-        subject.update(kind: 'unipedal')
+        robot.update(kind: 'unipedal')
         batch_info =
           [
             { duration: 10_000, tasks: ['Desc'] },
@@ -133,26 +139,26 @@ RSpec.describe Robot, type: :model do
             { duration: 40_000, tasks: ['Desc'] },
             { duration: 50_000, tasks: ['Desc'] }
           ]
-        expect(subject.tasks_batch_info).to eq(batch_info)
+        expect(robot.tasks_batch_info).to eq(batch_info)
       end
 
       it 'returns the tasks duration for five or more appendages' do
-        subject.update(kind: 'arachnid')
+        robot.update(kind: 'arachnid')
         batch_info =
           [
             { duration: 50_000, tasks: %w[Desc Desc Desc Desc Desc] }
           ]
-        expect(subject.tasks_batch_info).to eq(batch_info)
+        expect(robot.tasks_batch_info).to eq(batch_info)
       end
 
       it 'returns the tasks duration for five or more appendages' do
-        subject.update(kind: 'quadrupedal')
+        robot.update(kind: 'quadrupedal')
         batch_info =
           [
             { duration: 40_000, tasks: %w[Desc Desc Desc Desc] },
             { duration: 50_000, tasks: ['Desc'] }
           ]
-        expect(subject.tasks_batch_info).to eq(batch_info)
+        expect(robot.tasks_batch_info).to eq(batch_info)
       end
     end
   end
