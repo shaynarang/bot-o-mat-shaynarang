@@ -55,12 +55,10 @@ class Robot < ApplicationRecord
     return if tasks.empty?
 
     etas = tasks.pluck(:eta)
-    if appendage_count >= 5
-      etas.max
-    elsif appendage_count == 1
-      etas.sum
-    else
-      task_batch_durations(etas).sum
+    case appendage_count
+    when 5 then etas.max
+    when 1 then etas.sum
+    else task_batch_durations(etas).sum
     end
   end
 
