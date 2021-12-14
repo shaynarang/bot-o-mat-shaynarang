@@ -12,8 +12,8 @@ class Robot < ApplicationRecord
   before_validation :remove_mobile_tasks, unless: -> { mobile? }
 
   validates_presence_of :name, :kind
-  validate :task_amount
-  validate :mobility
+  validate :task_amount_within_limit
+  validate :mobility_requirement
 
   # Count of appendages based on the kind of robot.
   def appendage_count
@@ -32,64 +32,25 @@ class Robot < ApplicationRecord
     unipedal? ? false : true
   end
 
-  # Count of tasks to iterate over for robots with between one and five appendages.
-  # If a robot has more appendages than tasks, the batch count is the tasks count.
-  def tasks_batch_count
-    appendage_count > tasks.size ? tasks.size : appendage_count
-  end
-
-  # Array of task durations for robots with between one and five appendages.
-  def task_batch_durations(etas)
-    maximums = []
-    etas.sort.each_slice(tasks_batch_count) do |batch|
-      maximums << batch.max
-    end
-    maximums
-  end
-
-  # Total duration of tasks assigned to a robot.
-  # A robot with five or more appendages can complete all tasks simultaneously.
-  # A robot with one appendage must work through each task sequentially.
-  # A robot with between one and five appendages must work in batches.
+  # Obtain total duration of tasks from service object.
   def tasks_duration
-    return if tasks.empty?
-
-    etas = tasks.pluck(:eta)
-    case appendage_count
-    when 5 then etas.max
-    when 1 then etas.sum
-    else task_batch_durations(etas).sum
-    end
+    TasksCalculator.new(self).total_duration
   end
 
-  # Array of hashes containing task batches and durations.
+  # Obtain array of hashes with task duration and descriptions from service object.
   def tasks_batch_info
-    return if tasks.empty?
-
-    batches = []
-    if appendage_count >= 5
-      batches << { duration: tasks.pluck(:eta).max, tasks: tasks.pluck(:description) }
-    elsif appendage_count == 1
-      tasks.each do |task|
-        batches << { duration: task.eta, tasks: [task.description] }
-      end
-    else
-      tasks.order(:eta).each_slice(tasks_batch_count) do |task_batch|
-        batches << { duration: task_batch.pluck(:eta).max, tasks: task_batch.pluck(:description) }
-      end
-    end
-    batches
+    TasksCalculator.new(self).batch_info
   end
 
   private
 
-  def task_amount
+  def task_amount_within_limit
     return if tasks.blank? || tasks.size <= 5
 
     errors.add(:base, 'cannot have more than five tasks')
   end
 
-  def mobility
+  def mobility_requirement
     return if tasks.blank? || mobile? || !tasks.map(&:requires_mobility).include?(true)
 
     errors.add(:base, 'must be mobile to complete this task')
