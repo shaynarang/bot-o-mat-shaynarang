@@ -92,8 +92,7 @@ RSpec.describe Robot, type: :model do
     context 'with two tasks' do
       it 'returns the tasks duration for robots with three appendages' do
         robot.update(kind: 'aeronautical')
-        tasks = Task.limit(2)
-        tasks.map { |task| robot.tasks << task }
+        tasks.limit(2).map { |task| robot.tasks << task }
         expect(robot.tasks_duration).to eq(20_000)
       end
     end
@@ -128,8 +127,7 @@ RSpec.describe Robot, type: :model do
     context 'with two tasks' do
       it 'returns the tasks duration for robots with three appendages' do
         robot.update(kind: 'aeronautical')
-        tasks = Task.limit(2)
-        tasks.map { |task| robot.tasks << task }
+        tasks.limit(2).map { |task| robot.tasks << task }
         batch_info =
           [
             { duration: 20_000, tasks: %w[Desc Desc] }
